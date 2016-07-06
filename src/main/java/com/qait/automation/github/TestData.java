@@ -7,11 +7,11 @@ import org.yaml.snakeyaml.Yaml;
 
 public class TestData 
 {
+	
 	public static String getvalue(String s)
 	{
-		// The path of your YAML file.
-		final String fileName = "/home/anshulgarg/workspace/github/src/test/java/code.yml";
-
+		
+		final String fileName="src"+File.separator+"test"+File.separator+"java"+File.separator+"code.yml";
 		Yaml yaml = new Yaml();
 		Object obj;
 		Map result = null;

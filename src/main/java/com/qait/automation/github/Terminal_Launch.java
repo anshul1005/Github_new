@@ -16,27 +16,29 @@ public class Terminal_Launch extends NewTest
 	File file;
 	String source;
 	String fn;
-	String usr=TestData.getvalue("username")+"/";
+	String usr=TestData.getvalue("username")+File.separator;
 	String os=System.getProperty("os.name");
 	public String File_create(String url) throws IOException
 	{ 
 		String first = StringUtils.substringBefore(url, ".git");
 		String final_word = StringUtils.substringAfter(first,usr);
-		 if(os.equalsIgnoreCase("linux"))
+		 if(os.contains("Linux"))
 	        {
 			 fn = (TestData.getvalue("file_name_linux"));
 	        }
-		 if(os.equalsIgnoreCase("windows"))
+		 if(os.contains("Windows"))
 	        {
 			 fn = (TestData.getvalue("file_name_windows"));
 	        }
-		file = new File(fn);
+		 
+		file = new File(System.getProperty("user.dir")+File.separator+fn);
 		FileWriter fileWritter = new FileWriter(file.getName(),true);
 		file.setExecutable(true);
         BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-        if(os.equalsIgnoreCase("linux"))
+        if(os.contains("Linux"))
         {
-        	source = System.getProperty("user.dir")+"/"+(TestData.getvalue("file_name_linux"));
+        	url = url.replace("https://github.com/","git@github.com:");
+        	source = System.getProperty("user.dir")+File.separator+(TestData.getvalue("file_name_linux"));
 	        bufferWritter.write("#!/bin/sh");
 	        bufferWritter.newLine();
 	        bufferWritter.write("cd");
@@ -55,24 +57,17 @@ public class Terminal_Launch extends NewTest
 	        bufferWritter.newLine();
 	        bufferWritter.close();
         }
-        if(os.equalsIgnoreCase("windows"))
+        if(os.contains("Windows"))
         {
-        	source = System.getProperty("user.dir")+"/"+(TestData.getvalue("file_name_windows"));
-        	bufferWritter.write("cd ..");
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd ..");
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd users");
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd "+os);
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd Desktop");
+        	url = url.replace("git@github.com:","git@github.com:");
+        	source = System.getProperty("user.dir")+File.separator+(TestData.getvalue("file_name_windows"));
+        	bufferWritter.write("cd \\");
 	        bufferWritter.newLine();
 	        bufferWritter.write("git clone "+url);
 	        bufferWritter.newLine();
-	        bufferWritter.write("cp "+ source+ " "+final_word);
+	        bufferWritter.write("copy "+ source+ " "+final_word);
 	        bufferWritter.newLine();
-	        bufferWritter.write("cd "+final_word+"/");
+	        bufferWritter.write("cd "+final_word);
 	        bufferWritter.newLine();
 	        bufferWritter.write("git add -A");
 	        bufferWritter.newLine();
@@ -87,39 +82,30 @@ public class Terminal_Launch extends NewTest
 	public List<String> executeCommand()
 	{
 		String line1 = null;
-		String line2 = null;
-		String text=null;
 		 List<String> list = new ArrayList<String>();
 		try
 		{
+			
 			ProcessBuilder builder = new ProcessBuilder(source);
 			builder.redirectErrorStream(true);
 			Process process = builder.start();
 			InputStream is = process.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			while ((line1 = reader.readLine()) != null) 
+				while ((line1=reader.readLine()) != null) 
+				{
+					list.add(line1)	;
+				}
+		}
+			catch(Exception e)
 			{
-				break;
-			}
-			while ((line2 = reader.readLine()) != null) 
-			{
-				text=reader.readLine();
+				e.printStackTrace();
 				
 			}
-		
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			
-		}
-		finally 
-		{
-			list.add(line1);
-			list.add(text);
-			file.delete();
-			return list;
-		}
-	}
+			finally 
+			{
+				file.delete();
+				return list;
+	        }
+      }
 }
 

@@ -16,27 +16,27 @@ public class Pull_readme_and_validate extends NewTest
 	File file;
 	String source ;
 	String fn;
-	String usr=TestData.getvalue("username")+"/";
+	String usr=TestData.getvalue("username")+File.separator;
 	String os=System.getProperty("os.name");
 	public void File_create(String url) throws IOException
 	{ 
 		String first = StringUtils.substringBefore(url, ".git");
 		String final_word = StringUtils.substringAfter(first,usr);
-		if(os.equalsIgnoreCase("linux"))
+		if(os.contains("Linux"))
         {
 		 fn = (TestData.getvalue("file_name_linux"));
         }
-	 if(os.equalsIgnoreCase("windows"))
+	 if(os.contains("Windows"))
         {
 		 fn = (TestData.getvalue("file_name_windows"));
         }
-		file = new File(fn);
+		file = new File(System.getProperty("user.dir")+File.separator+fn);
 		FileWriter fileWritter = new FileWriter(file.getName(),true);
 		file.setExecutable(true);
         BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-        if(os.equalsIgnoreCase("linux"))
+        if(os.contains("Linux"))
         {
-        	source = System.getProperty("user.dir")+"/"+(TestData.getvalue("file_name_linux"));
+        	source = System.getProperty("user.dir")+File.separator+(TestData.getvalue("file_name_linux"));
 	        bufferWritter.write("#!/bin/sh");
 	        bufferWritter.newLine();
 	        bufferWritter.write("cd");
@@ -47,20 +47,12 @@ public class Pull_readme_and_validate extends NewTest
 	        bufferWritter.newLine();
 	        bufferWritter.close();
 	     }
-        if(os.equalsIgnoreCase("windows"))
+        if(os.contains("Windows"))
         {
-        	source = System.getProperty("user.dir")+"/"+(TestData.getvalue("file_name_windows"));
-        	bufferWritter.write("cd ..");
+        	source = System.getProperty("user.dir")+File.separator+(TestData.getvalue("file_name_windows"));
+        	bufferWritter.write("cd \\");
 	        bufferWritter.newLine();
-	        bufferWritter.write("cd ..");
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd users");
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd "+os);
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd Desktop");
-	        bufferWritter.newLine();
-	        bufferWritter.write("cd "+final_word+"/");
+	        bufferWritter.write("cd "+final_word);
 	        bufferWritter.newLine();
 	        bufferWritter.write("git pull origin master");
 	        bufferWritter.newLine();
@@ -71,8 +63,6 @@ public class Pull_readme_and_validate extends NewTest
 	public List<String> executeCommand()
 	{
 		String line1 = null;
-		String line2 = null;
-		String text=null;
 		 List<String> list = new ArrayList<String>();
 		try
 		{
@@ -96,7 +86,7 @@ public class Pull_readme_and_validate extends NewTest
 			{
 				file.delete();
 				return list;
-	}
-}
+	        }
+      }
 }
 

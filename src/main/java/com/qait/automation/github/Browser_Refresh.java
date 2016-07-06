@@ -37,27 +37,14 @@ public class Browser_Refresh extends NewTest
 	
 	public boolean validate_file(String file_name) 
 	{ 
-		
-		try
-		{
-			Thread.sleep(2000);
-			driver.navigate().refresh();
-		} 
-		catch (InterruptedException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		text=commit.getText();
 		file=commit.getText();
 		if(text.isEmpty() && !file.equals(file_name) )
 		{
-			
 			return false;
 		}
 		else 
 		{
-			
 			return true;
 		}	
 	}
